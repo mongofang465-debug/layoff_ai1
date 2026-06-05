@@ -1,5 +1,7 @@
 import streamlit as st
+import os
 from openai import OpenAI
+
 st.set_page_config(page_title="裁员生存助手 AI版", page_icon="🧠")
 
 st.title("🧠 裁员生存助手（OpenRouter AI版）")
@@ -9,8 +11,8 @@ st.title("🧠 裁员生存助手（OpenRouter AI版）")
 # -----------------------
 api_key = os.getenv("OPENROUTER_API_KEY")
 
-# ⭐ OpenRouter关键点：base_url必须改
 client = None
+
 if api_key:
     client = OpenAI(
         api_key=api_key,
@@ -30,7 +32,7 @@ skills = st.text_area("核心技能")
 if st.button("生成AI生存方案"):
 
     if not api_key:
-        st.error("请先输入 OpenRouter API Key")
+        st.error("请先配置 OPENROUTER_API_KEY")
         st.stop()
 
     if not industry or not skills:
@@ -52,18 +54,22 @@ if st.button("生成AI生存方案"):
 4. 现实风险提醒（不要鸡汤，要真实）
 """
 
-    with st.spinner("Groq AI生成中..."):
+    with st.spinner("AI生成中..."):
 
-        response = client.chat.completions.create(
-            model="gpt-3.5-turbo",   # ⭐ OpenRouter模型
-            messages=[
-                {"role": "system", "content": "你是一个务实的职业规划顾问"},
-                {"role": "user", "content": prompt}
-            ],
-            temperature=0.7
-        )
+        try:
+            response = client.chat.completions.create(
+                model="openrouter/free",
+                messages=[
+                    {"role": "system", "content": "你是一个务实的职业规划顾问"},
+                    {"role": "user", "content": prompt}
+                ],
+                temperature=0.7
+            )
 
-        result = response.choices[0].message.content
+            result = response.choices[0].message.content
 
-        st.subheader("📊 AI生存方案")
-        st.write(result)
+            st.subheader("📊 AI生存方案")
+            st.write(result)
+
+        except Exception as e:
+            st.error(f"AI调用失败: {str(e)}")
