@@ -4,7 +4,7 @@ from openai import OpenAI
 
 st.set_page_config(page_title="裁员生存助手 AI版", page_icon="🧠")
 
-st.title("🧠 裁员生存助手（OpenRouter AI版）")
+st.title("🧠 裁员生存助手")
 
 # -----------------------
 # API KEY
