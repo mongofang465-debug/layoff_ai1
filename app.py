@@ -7,7 +7,7 @@ st.title("🧠 裁员生存助手（OpenRouter AI版）")
 # -----------------------
 # API KEY
 # -----------------------
-api_key = st.text_input("OpenRouter API", type="password")
+api_key = os.getenv("OPENROUTER_API_KEY")
 
 # ⭐ OpenRouter关键点：base_url必须改
 client = None
